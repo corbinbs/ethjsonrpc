@@ -97,14 +97,14 @@ class EthJsonRpc(object):
         receipt = self.eth_getTransactionReceipt(tx)
         return receipt['contractAddress']
 
-    def call(self, address, sig, args, result_types):
+    def call(self, address, sig, args, result_types, from_address=None):
         '''
         Call a contract function on the RPC server, without sending a
         transaction (useful for reading data)
         '''
         data = self._encode_function(sig, args)
         data_hex = data.encode('hex')
-        response = self.eth_call(to_address=address, data=data_hex)
+        response = self.eth_call(address, from_address=from_address, data=data_hex)
         return decode_abi(result_types, response[2:].decode('hex'))
 
     def call_with_transaction(self, from_, address, sig, args, gas=None, gas_price=None):
